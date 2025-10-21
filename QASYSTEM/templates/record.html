@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问答日志</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex justify-center items-center">
+    <div class="h-[80%] w-[80%] border rounded-xl overflow-hidden shadow flex">
+        <div class="w-[300px] flex flex-col h-full px-5 py-8 bg-white border-r">
+            <div class="flex-1">
+                <h1 class="font-bold text-2xl text-indigo-700">医疗知识问答</h1>
+                <p class="text-sm mt-2 text-gray-600">——基于寻医问药-疾病百科数据</p>
+            </div>
+            <div class="text-gray-700 text-sm text-right">
+                Copyright @ <a href="http://www.ichenhua.cn" class="text-indigo-700">贵州大学</a>
+            </div>
+        </div>
+        <div class="bg-white flex-1 flex flex-col">
+            <div class="px-5 py-3 border-b font-semibold text-indigo-700">问答日志</div>
+            <div class="p-5 text-sm flex-1 overflow-y-auto" id="log-container">
+                <!-- 日志内容将在这里动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从localStorage加载日志
+        function loadLogs() {
+            return JSON.parse(localStorage.getItem('chatLogs')) || [];
+        }
+
+        // 渲染日志到页面
+        function renderLogs() {
+            const logs = loadLogs();
+            const container = document.getElementById('log-container');
+            container.innerHTML = ''; // 清空现有内容
+
+            logs.forEach(log => {
+                const logDiv = document.createElement('div');
+                logDiv.className = 'space-y-2 mb-4 p-2 bg-gray-100 rounded-md';
+
+                // 时间戳
+                const timestampDiv = document.createElement('div');
+                timestampDiv.className = 'text-xs text-gray-500';
+                timestampDiv.textContent = log.timestamp;
+                logDiv.appendChild(timestampDiv);
+
+                // 问题
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'text-blue-600 font-semibold';
+                questionDiv.textContent = `用户: ${log.type === 2 ? log.content : ''}`;
+                logDiv.appendChild(questionDiv);
+
+                // 回答
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'text-gray-700';
+                answerDiv.textContent = `机器人: ${log.type === 1 ? log.content : ''}`;
+                logDiv.appendChild(answerDiv);
+
+                container.appendChild(logDiv);
+            });
+        }
+
+        // 页面加载时渲染日志
+        window.onload = renderLogs;
+    </script>
+</body>
+</html>
